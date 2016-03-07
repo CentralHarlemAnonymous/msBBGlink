@@ -1,5 +1,5 @@
 /* To launch this program from within Mathematica use:
- *   In[1]:= link = Install["addtwo"]
+ *   In[1]:= link = Install["msGetBBG.exe"]
  *
  * Or, launch this program from a shell and establish a
  * peer-to-peer connection.  When given the prompt Create Link:
@@ -214,6 +214,7 @@ class RefDataExample
 			fields.appendValue(d_fields[i].c_str());
 		}
 
+		request.set("returnNullValue", "True"); // thanks to Jose Paula Bloomberg Support -- this prevents crash on oddball outcomes like dividends announced but cancelled before record date
 		outstream << "Sending Request: " << request << std::endl;
 		session.sendRequest(request);
 		return outstream.str();
@@ -223,8 +224,6 @@ class RefDataExample
 	std::string processResponseEvent(Event event, int debug)
 	{
 		std::stringstream outstream;
-	//	std::stringstream holderStream; // for debugging
-	//	std::string holderString; // for debugging
 		MessageIterator msgIter(event);
 		while (msgIter.next()) {
 			Message msg = msgIter.message();
@@ -266,9 +265,6 @@ class RefDataExample
 								if (debug > 0) {
 									outstream << field.name() << "\t\t";
 								}
-							//	holderStream << field.name();
-							//	holderString = holderStream.str();
-							//	holderString = field.getValueAsString();
 								outstream << field.getValueAsString();
 							}
 						}
@@ -316,7 +312,6 @@ class RefDataExample
 				else if (field.isArray()) {		// possibility 2 - field is an array or matrix
 					for (size_t rowNo = 0; rowNo < field.numValues(); ++rowNo) {	// get every row
 						Element row = field.getValueAsElement(rowNo);	// http://bloomberg.github.io/blpapi-docs/dotnet/3.7/html/T_Bloomberglp_Blpapi_Element.htm
-						// Element row = field.getElement(rowNo);
 						if (!row.isValid()) {					//	possibility 1 - row is not valid
 							outstream << " row " << row.name() << " is NULL." << std::endl;
 						}
@@ -331,23 +326,8 @@ class RefDataExample
 								int whatType = item.datatype();
 								std::string nameString = name1.string();
 
-								if (item.isNull()) {
-									1 + 1;
-								};
-							//	if (item.isNullValue()) {
-							//		1 + 1;
-							//	};
-								if (! item.hasElement(name1)) {	// this check was added in the hope it would strip out the AAPL cancelled dividend crash. It didn't.
-					/*				if (whatType == BLPAPI_DATATYPE_DATE ||
-										whatType == BLPAPI_DATATYPE_TIME) {	// special treatment for dates
-										Datetime dateHolder;
-										dateHolder = item.getValueAsDatetime();
-										std::string	valString2 = std::to_string(dateHolder.year()) + "-" + std::to_string(dateHolder.month()) + "-" + std::to_string(dateHolder.day());
-										valString = valString2.c_str();	// this whole fancy handling of dates may be excessive; .getValueAsString() does work for dates.
-									}
-									else {	*/
+								if (! item.hasElement(name1)) {
 										valString = item.getValueAsString();
-						//			}
 								}
 								else { valString = "no entry"; }
 								
@@ -385,7 +365,6 @@ class RefDataExample
 				wholeString.pop_back();
 				wholeString.pop_back();
 				outstream.str(std::string());	// clear outstream
-				// outstream << wholeString << std::endl;
 				outstream << "{" << wholeString << "}";
 				justDidAnArray = false;
 			}
@@ -401,7 +380,6 @@ class RefDataExample
 						"category")
 					<< ": " << fieldException.getElementAsString(FIELD_ID);
 			}
-			//outstream << std::endl;
 		}
 		return outstream.str();
 	}
@@ -450,8 +428,6 @@ class RefDataExample
 
 public:
 
-// makes one or more Bloomberg calls, gets the Event response and associated MessageIterator, then calls ProcessMessage() to deal with what it's gotten. Returns the result to msGetBBG()
-// adapted from BBG 2016, closely related to Alvin's "Retrieve" function in BBRetrieveCurrent
 	RefDataExample()
 	{
 		d_host = "localhost";
@@ -462,6 +438,8 @@ public:
 	{
 	}
 
+	// makes one or more Bloomberg calls, gets the Event response and associated MessageIterator, then calls ProcessMessage() to deal with what it's gotten. Returns the result to msGetBBG()
+	// adapted from BBG 2016, closely related to the "Retrieve" function in the 2008/2009 code's BBRetrieveCurrent
 	std::string run(const char* Ticker, const char* Field, int debug)
 	{
 		std::stringstream outstream;
