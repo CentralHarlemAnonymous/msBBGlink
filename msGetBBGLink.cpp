@@ -61,6 +61,19 @@ extern "C" {
 		const char        *message);
 }
 
+std::string trim(const std::string& str,
+	const std::string& whitespace = " \t")
+{
+	const auto strBegin = str.find_first_not_of(whitespace);
+	if (strBegin == std::string::npos)
+		return ""; // no content
+
+	const auto strEnd = str.find_last_not_of(whitespace);
+	const auto strRange = strEnd - strBegin + 1;
+
+	return str.substr(strBegin, strRange);
+}
+
 void loggingCallback(blpapi_UInt64_t    threadId,
 	int                severity,
 	blpapi_Datetime_t  timestamp,
@@ -116,38 +129,29 @@ class RefDataExample
 	int                      d_port;
 	std::vector<std::string> d_securities;
 	std::vector<std::string> d_fields;
+	size_t					totalSecuritiesRequested = 0;
+	size_t					totalSecuritiesDealtWith = 0;
 
 	bool bloombergLists(const char* Ticker, const char* Field)	// formerly bool parseCommandLine(int argc, char **argv) from RefDataExample.cpp
 	{
 
 		int verbosityCount = 0;
+		char buff[100000];
+		char seps[] = "&";
+		char *token;
 
-		// for the moment assumes a single ticker and single field
-		d_securities.push_back(Ticker);
-		d_fields.push_back(Field);
+		d_fields.push_back(Field);	// allows only a single Field. Could be adapted without too much trouble to allow multiple fields.
 
-/*		for (int i = 1; i < argc; ++i) {
-			if (!std::strcmp(argv[i], "-s") && i + 1 < argc) {
-				d_securities.push_back(argv[++i]);
-			}
-			else if (!std::strcmp(argv[i], "-f") && i + 1 < argc) {
-				d_fields.push_back(argv[++i]);
-			}
-			else if (!std::strcmp(argv[i], "-ip") && i + 1 < argc) {
-				d_host = argv[++i];
-			}
-			else if (!std::strcmp(argv[i], "-p") && i + 1 < argc) {
-				d_port = std::atoi(argv[++i]);
-			}
-			else if (!std::strcmp(argv[i], "-v")) {
-				++verbosityCount;
+		// new code for version 0.4 in which I allow multiple tickers
+		strncpy_s(buff, 100000, Ticker, 99999);
+		token = std::strtok(buff, seps);
+		while (token != NULL)
+		{
+			d_securities.push_back(token);
+			totalSecuritiesRequested = totalSecuritiesRequested + 1;
+			token = std::strtok(NULL, seps);
+		}
 
-			}
-			else {
-				printUsage();
-				return false;
-			}
-		}	*/
 		if (verbosityCount) {
 			registerCallback(verbosityCount);
 		}
@@ -200,11 +204,11 @@ class RefDataExample
 	{
 		std::stringstream outstream;
 		Service refDataService = session.getService("//blp/refdata");
-		Request request = refDataService.createRequest("ReferenceDataRequest");
+		Request request = refDataService.createRequest("ReferenceDataRequest");		// http://bloomberg.github.io/blpapi-docs/cpp/3.9/classblpapi_1_1Request.html
 
 		// Add securities to request
 		Element securities = request.getElement("securities");
-		for (size_t i = 0; i < d_securities.size(); ++i) {
+		for (size_t i = 0; i < d_securities.size(); ++i) {	// d_securities is a class global populated in bloombergLists()
 			securities.appendValue(d_securities[i].c_str());
 		}
 
@@ -220,7 +224,7 @@ class RefDataExample
 		return outstream.str();
 	}
 
-	// return true if processing is completed, false otherwise
+
 	std::string processResponseEvent(Event event, int debug)
 	{
 		std::stringstream outstream;
@@ -233,11 +237,13 @@ class RefDataExample
 			}
 
 			Element securities = msg.getElement(SECURITY_DATA);
-			size_t numSecurities = securities.numValues();
+			size_t	numSecurities = securities.numValues();
+			
 			if (debug > 0) {
 				outstream << "Processing " << (unsigned int)numSecurities << " securities:" << std::endl;
 			}
 			for (size_t i = 0; i < numSecurities; ++i) {
+				totalSecuritiesDealtWith = totalSecuritiesDealtWith + 1;
 				Element security = securities.getValueAsElement(i);
 				std::string ticker = security.getElementAsString(SECURITY);
 				if (debug > 0) {
@@ -259,17 +265,50 @@ class RefDataExample
 						for (size_t j = 0; j < numElements; ++j) {
 							Element field = fields.getElement(j);
 							if (field.isArray()) {
+								if (totalSecuritiesRequested > 1) {
+									outstream << "{\"" << trim(ticker) << "\",";
+								}
 								outstream << processBulkData(msg, debug);
+								if (totalSecuritiesRequested > 1) {
+									outstream << "}";
+								}
+
+								if (totalSecuritiesRequested > 1 && totalSecuritiesDealtWith < totalSecuritiesRequested) {
+									outstream << ", ";
+								}
 							}
 							else {
 								if (debug > 0) {
 									outstream << field.name() << "\t\t";
 								}
-								outstream << field.getValueAsString();
-							}
-						}
-					}
-				}
+
+								if (totalSecuritiesRequested > 1) {
+									outstream << "{\"" << trim(ticker) << "\",";
+								}
+
+								int whatType = field.datatype();	// I need to put quotes around dates and strings or else translation in Mathematica won't work well.
+								if ((whatType == BLPAPI_DATATYPE_STRING ||
+									whatType == BLPAPI_DATATYPE_BYTEARRAY ||
+									whatType == BLPAPI_DATATYPE_DATE ||
+									whatType == BLPAPI_DATATYPE_TIME) /* && totalSecuritiesRequested > 1 */) {
+									outstream << "\"" << field.getValueAsString() << "\"";
+								}
+								else {
+									outstream << field.getValueAsString(); // adds one datum to outstream
+								}
+
+								if (totalSecuritiesRequested > 1) {
+									outstream << "}";
+								}
+
+								if (totalSecuritiesRequested > 1 && totalSecuritiesDealtWith < totalSecuritiesRequested) {
+									outstream << ", ";
+								}
+
+							}	// end non-bulk data loop
+						}	// j = 0 to numElements loop
+					}	// numElements > 0 test
+				}	// end field data exists test
 	//			outstream << std::endl;
 				Element fieldExceptions = security.getElement(FIELD_EXCEPTIONS);
 				if (fieldExceptions.numValues() > 0) {
@@ -284,9 +323,9 @@ class RefDataExample
 							<< errInfo.getElementAsString(CATEGORY) << " ( "
 							<< errInfo.getElementAsString(MESSAGE) << ")" << std::endl;
 					}
-				}
-			}
-		}
+				}	// end per-exception loop
+			}	// end of per-security loop
+		}	// end per-iterator loop
 		return outstream.str();
 	}
 
@@ -360,7 +399,7 @@ class RefDataExample
 					outstream << "SimpleDatum :" << field.name() << " = "	<< field.getValueAsString() << std::endl;
 				}
 			}	// end of field review
-			if (justDidAnArray) {	// trim the trailing comma and space. somehow this is killing the previous ticker reference too
+			if (justDidAnArray) {	// trim the trailing comma and space.
 				std::string wholeString = outstream.str();
 				wholeString.pop_back();
 				wholeString.pop_back();
@@ -401,7 +440,7 @@ class RefDataExample
 				if (debug > 0) {
 					outstream << "Processing Response" << std::endl;
 				}
-				outstream << processResponseEvent(event, debug);
+				outstream << processResponseEvent(event, debug);	// generally gets hit only once unless more than ten securities are involved.
 				done = true;
 			}
 			else {
@@ -421,6 +460,11 @@ class RefDataExample
 					}
 				}
 			}
+		}
+		if (totalSecuritiesRequested > 1 && debug == 0) {
+			std::string holder = outstream.str();
+			outstream.str(std::string());
+			outstream << "{" << holder << "}";
 		}
 		return outstream.str();
 	}
@@ -443,6 +487,7 @@ public:
 	std::string run(const char* Ticker, const char* Field, int debug)
 	{
 		std::stringstream outstream;
+//		std::string outstring;
 		bloombergLists(Ticker, Field); /* sets up tickers and fields */
 
 		SessionOptions sessionOptions;
@@ -464,7 +509,7 @@ public:
 
 		// wait for events from session.
 		try {
-			outstream << eventLoop(session, debug);
+			outstream << eventLoop(session, debug);	// if there are multiple answers, they all get loaded into outstream within eventLoop()
 		}
 		catch (Exception &e) {
 			outstream << "Library Exception !!!"
@@ -480,8 +525,8 @@ public:
 	}
 };
 
-// This is effectively our entry point. It's called by WSTP template code. alvin's Retrieve function returned a string
-// BBRetrieve per the template file has a returntype of Manual, which means I need to use a function like WSPutInteger32() to return an integer
+// This is effectively our entry point. It's called by WSTP template code.
+// per the template file, msGetBBGLink() has a returntype of Manual, which means I need to use a function like WSPutInteger32() to return an integer
 void msGetBBGLink(const char* ticker, const char* field, int debug)
 {
 	RefDataExample bbgCallResponse;
