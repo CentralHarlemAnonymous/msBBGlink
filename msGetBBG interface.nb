@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    398067,       8260]
-NotebookOptionsPosition[    393377,       8094]
-NotebookOutlinePosition[    393728,       8109]
-CellTagsIndexPosition[    393685,       8106]
+NotebookDataLength[    407258,       8476]
+NotebookOptionsPosition[    402097,       8294]
+NotebookOutlinePosition[    402446,       8309]
+CellTagsIndexPosition[    402403,       8306]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -21,9 +21,38 @@ Notebook[{
 
 Cell[CellGroupData[{
 Cell["msGetBBG wrapper", "Title",
- CellChangeTimes->{{3.6661149246850777`*^9, 3.6661149283396516`*^9}}],
+ CellChangeTimes->{{3.6661149246850777`*^9, 3.6661149283396516`*^9}, {
+  3.6697492468831873`*^9, 3.6697492473082123`*^9}, {3.6698928331243663`*^9, 
+  3.669892833503436*^9}}],
 
 Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"bbgifyDate", "[", "date_", "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "dtO", "}"}], ",", 
+      RowBox[{
+       RowBox[{"dtO", "=", 
+        RowBox[{"Which", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"StringQ", "[", "date", "]"}], "&&", 
+           RowBox[{
+            RowBox[{"StringLength", "[", "date", "]"}], "\[Equal]", "0"}]}], 
+          ",", 
+          RowBox[{"DateObject", "[", "]"}], ",", 
+          RowBox[{
+           RowBox[{"Head", "[", "date", "]"}], "===", "DateObject"}], ",", 
+          "date", ",", "True", ",", 
+          RowBox[{"DateObject", "[", "date", "]"}]}], "]"}]}], ";", 
+       RowBox[{"DateString", "[", 
+        RowBox[{"dtO", ",", 
+         RowBox[{"{", 
+          RowBox[{"\"\<Year\>\"", ",", "\"\<Month\>\"", ",", "\"\<Day\>\""}], 
+          "}"}]}], "]"}]}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"Options", "[", "msGetBBGMakeLinkObject", "]"}], "=", 
@@ -34,7 +63,7 @@ Cell[BoxData[{
        RowBox[{
         RowBox[{"HomeDirectory", "[", "]"}], ",", "\"\<Box Sync\>\"", ",", 
         "\"\<programming\>\"", ",", "\"\<visual studio\>\"", ",", 
-        "\"\<msGetBBG visual 0.4\>\"", ",", "\"\<msGetBBG\>\"", ",", 
+        "\"\<msGetBBG visual 0.5\>\"", ",", "\"\<msGetBBG\>\"", ",", 
         "\"\<Debug\>\"", ",", "\"\<msGetBBGLink.exe\>\""}], "}"}], "]"}]}], 
     "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -48,15 +77,15 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"msGetBBGMakeLinkObject", "::", "usage"}], " ", "=", " ", 
     "\"\<msGetBBGMakeLinkObject[]: When run, launches the WSTP application \
-that moves current data from Bloomberg to Mathematica. msGetBB[] will launch \
-and kill this automatically, but you can do it manually with this function, \
-assign the result to a variable, and pass the link to msGetBB[] with the \
-\\\"LinkObject]\\\"\[Rule] option if you plan on calling it many times in \
-succession.  This saves the overhead of relaunching the link for every call. \
-When finished, can call Uninstall[(this link)] and the program will be quit. \
-For most users it will be better to run msGetBBG[] with a list of tickers \
-instead, as that approach returns data quicker (though tagged with each \
-datum's ticker and potentially not in the same order those tickers were \
+that moves current reference data from Bloomberg to Mathematica. msGetBB[] \
+will launch and kill this automatically, but you can do it manually with this \
+function, assign the result to a variable, and pass the link to msGetBB[] \
+with the \\\"LinkObject]\\\"\[Rule] option if you plan on calling it many \
+times in succession.  This saves the overhead of relaunching the link for \
+every call. When finished, can call Uninstall[(this link)] and the program \
+will be quit. For most users it will be better to run msGetBBG[] with a list \
+of tickers instead, as that approach returns data quicker (though tagged with \
+each datum's ticker and potentially not in the same order those tickers were \
 submitted to the function). Can set \\\"path to executable\\\" variable if \
 the default is for some reason not what you want.\>\""}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
@@ -74,9 +103,11 @@ the default is for some reason not what you want.\>\""}], ";"}],
         RowBox[{
          RowBox[{"HomeDirectory", "[", "]"}], ",", "\"\<Box Sync\>\"", ",", 
          "\"\<programming\>\"", ",", "\"\<visual studio\>\"", ",", 
-         "\"\<msGetBBG visual 0.4\>\"", ",", "\"\<msGetBBG\>\"", ",", 
-         "\"\<Debug\>\"", ",", "\"\<msGetBBGLink.exe\>\""}], "}"}], "]"}]}]}],
-     "}"}]}], ";"}], "\[IndentingNewLine]", 
+         "\"\<msGetBBG visual 0.5\>\"", ",", "\"\<msGetBBG\>\"", ",", 
+         "\"\<Debug\>\"", ",", "\"\<msGetBBGLink.exe\>\""}], "}"}], "]"}]}], 
+     ",", 
+     RowBox[{"\"\<overrides\>\"", "\[Rule]", 
+      RowBox[{"{", "}"}]}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"msGetBBG", "[", 
@@ -85,8 +116,9 @@ the default is for some reason not what you want.\>\""}], ";"}],
    RowBox[{"Module", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"raw", ",", "exp", ",", "link", ",", "ticks", ",", "trimmed"}], 
-      "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+      "raw", ",", "exp", ",", "link", ",", "ticks", ",", "trimmed", ",", 
+       "overrides"}], "}"}], ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"link", " ", "=", 
        RowBox[{"If", "[", 
@@ -115,24 +147,54 @@ the default is for some reason not what you want.\>\""}], ";"}],
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{
-         RowBox[{"OptionValue", "[", "\"\<noisy\>\"", "]"}], "||", 
+         RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}], "||", 
          RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}]}], ",", 
         RowBox[{"Print", "[", 
          RowBox[{"\"\<ticks: \>\"", ",", "ticks"}], "]"}]}], "]"}], ";", 
       "\[IndentingNewLine]", 
+      RowBox[{"overrides", "=", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Length", "[", 
+           RowBox[{"OptionValue", "[", "\"\<overrides\>\"", "]"}], "]"}], ">",
+           "0"}], ",", 
+         RowBox[{"StringJoin", "[", 
+          RowBox[{"Riffle", "[", 
+           RowBox[{
+            RowBox[{"Riffle", "[", 
+             RowBox[{
+              RowBox[{"Keys", "[", 
+               RowBox[{"OptionValue", "[", "\"\<overrides\>\"", "]"}], "]"}], 
+              ",", 
+              RowBox[{"Values", "[", 
+               RowBox[{"OptionValue", "[", "\"\<overrides\>\"", "]"}], 
+               "]"}]}], "]"}], ",", "\"\< & \>\""}], "]"}], "]"}], ",", 
+         "\"\<\>\""}], "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}], ",", 
+        RowBox[{"Print", "[", 
+         RowBox[{
+         "\"\<overrides: \>\"", ",", "overrides", ",", " ", 
+          "\"\<. (head: \>\"", ",", 
+          RowBox[{"Head", "[", "overrides", "]"}], ",", "\"\<)\>\""}], 
+         "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"raw", "=", 
        RowBox[{"msGetBBGLink", "[", 
         RowBox[{"ticks", ",", "field", ",", 
          RowBox[{"If", "[", 
           RowBox[{
            RowBox[{"OptionValue", "[", "\"\<noisy\>\"", "]"}], ",", "1", ",", 
-           "0"}], "]"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+           "0"}], "]"}], ",", "overrides"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}], ",", 
         RowBox[{"Print", "[", 
-         RowBox[{"\"\<raw: \>\"", ",", "raw"}], "]"}]}], "]"}], ";", 
-      "\[IndentingNewLine]", 
+         RowBox[{"\"\<raw Head: \>\"", ",", 
+          RowBox[{"Head", "[", "raw", "]"}], ",", "\"\<. raw: \>\"", ",", 
+          "raw"}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
         RowBox[{
@@ -145,37 +207,46 @@ the default is for some reason not what you want.\>\""}], ";"}],
       " ", "\[IndentingNewLine]", 
       RowBox[{"If", "[", 
        RowBox[{
-        RowBox[{"!", 
-         RowBox[{"StringContainsQ", "[", 
-          RowBox[{"raw", ",", "\"\<EXCEPTION\>\""}], "]"}]}], ",", 
-        "\[IndentingNewLine]", 
         RowBox[{
-         RowBox[{"trimmed", "=", 
-          RowBox[{"StringTrim", "[", "raw", "]"}]}], ";", 
-         "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
+         RowBox[{"Head", "[", "raw", "]"}], "===", "msGetBBGLink"}], ",", 
+        RowBox[{
+         RowBox[{"Message", "[", 
+          RowBox[{"msGetBBG", "::", "linkDead"}], "]"}], ";", "Null"}], ",", 
+        RowBox[{"(*", "else", "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"!", 
+           RowBox[{"StringContainsQ", "[", 
+            RowBox[{"raw", ",", "\"\<EXCEPTION\>\""}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
           RowBox[{
-           RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}], ",", 
-           RowBox[{"Print", "[", 
-            RowBox[{"\"\<trimmed: \>\"", ",", "trimmed"}], "]"}]}], "]"}], 
-         ";", "\[IndentingNewLine]", 
-         RowBox[{"exp", "=", 
-          RowBox[{"If", "[", 
-           RowBox[{
-            RowBox[{"!", 
-             RowBox[{"OptionValue", "[", "\"\<noisy\>\"", "]"}]}], ",", 
-            RowBox[{"ToExpression", "[", "trimmed", "]"}], ",", "trimmed"}], 
-           "]"}]}], ";", "\[IndentingNewLine]", 
-         RowBox[{"If", "[", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"Head", "[", "exp", "]"}], "===", "String"}], ",", "raw", 
-           ",", "exp"}], "]"}]}], ",", 
-        RowBox[{"(*", " ", 
-         RowBox[{"else", ",", " ", 
-          RowBox[{"had", " ", "exception"}]}], " ", "*)"}], 
-        "\[IndentingNewLine]", "raw"}], "]"}]}]}], "\[IndentingNewLine]", 
-    "]"}]}], ";"}], "\[IndentingNewLine]", 
+           RowBox[{"trimmed", "=", 
+            RowBox[{"StringTrim", "[", "raw", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"OptionValue", "[", "\"\<outer noisy\>\"", "]"}], ",", 
+             RowBox[{"Print", "[", 
+              RowBox[{"\"\<trimmed: \>\"", ",", "trimmed"}], "]"}]}], "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"exp", "=", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{"!", 
+               RowBox[{"OptionValue", "[", "\"\<noisy\>\"", "]"}]}], ",", 
+              RowBox[{"ToExpression", "[", "trimmed", "]"}], ",", "trimmed"}],
+              "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Head", "[", "exp", "]"}], "===", "String"}], ",", 
+             "raw", ",", "exp"}], "]"}]}], ",", 
+          RowBox[{"(*", " ", 
+           RowBox[{"else", ",", " ", 
+            RowBox[{"had", " ", "exception"}]}], " ", "*)"}], 
+          "\[IndentingNewLine]", "raw"}], "]"}]}], "\[IndentingNewLine]", 
+       "]"}]}]}], "\[IndentingNewLine]", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"msGetBBG", "::", "usage"}], " ", "=", " ", 
@@ -193,12 +264,22 @@ as a list (e.g. msGetBBG[{\\\"AAPL US Equity\\\",\\\"IBM US \
 Equity\\\"},\\\"DVD_EX_DT\\\"]). For long lists this is about 20x faster than \
 calling the function repeatedly. If used in this manner, the function may \
 return the answers out of order, but will attach the security name to each \
-datum for identification.\n\nCan set the \\\"path to executable\\\" variable \
-if the default is for some reason not what you want.\n\
-\\\"noisy\\\"\[Rule]True will return debugging information from both the WSTP \
-conduit and the Mathematica interface that calls it. \\\"outer noisy\\\"\
-\[Rule]True will debugging information from only the Mathematica part.\>\""}],
-   ";"}]}], "Input",
+datum for identification.\n\nYou can pass overrides to the function with \
+\\\"overrides\\\"\[Rule]<|\\\"field id 1\\\"\[Rule]\\\"value 1\\\", \\\"field \
+id 2\\\"\[Rule]\\\"value two\\\", \\\"field id 3\\\"\[Rule]\\\"field \
+three\\\"|>}. Check the FLDS command for a security on the Bloomberg terminal \
+to see which overrides are allowed.  You can include an arbitrary number of \
+overrides.\n\nCan set the \\\"path to executable\\\" variable if the default \
+is for some reason not what you want.\n\\\"noisy\\\"\[Rule]True will return \
+debugging information from both the WSTP conduit and the Mathematica \
+interface that calls it. \\\"outer noisy\\\"\[Rule]True will debugging \
+information from only the Mathematica part.\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"msGetBBG", "::", "linkDead"}], "=", 
+   "\"\<Could not connect to link. Perhaps it died before Mathematica could \
+pass data to it.\>\""}], ";"}]}], "Input",
  CellChangeTimes->{{3.6663660367348022`*^9, 3.666366068754634*^9}, {
    3.6671498217776427`*^9, 3.6671499213303366`*^9}, {3.667150047122532*^9, 
    3.667150047516554*^9}, {3.6671500902830005`*^9, 3.667150098914494*^9}, {
@@ -210,7 +291,20 @@ conduit and the Mathematica interface that calls it. \\\"outer noisy\\\"\
    3.6672396529206657`*^9, 3.667239742353781*^9}, {3.6672400799340897`*^9, 
    3.667240135311257*^9}, {3.667242548485283*^9, 3.6672427493544207`*^9}, {
    3.667242869028266*^9, 3.6672429500569005`*^9}, 3.667642221614788*^9, {
-   3.6676458743067102`*^9, 3.6676458786919613`*^9}}],
+   3.6676458743067102`*^9, 3.6676458786919613`*^9}, 3.6697503841152334`*^9, {
+   3.669750424978571*^9, 3.6697504546122656`*^9}, 3.6697505260113497`*^9, {
+   3.6697505588412275`*^9, 3.6697506045848436`*^9}, {3.669909326988736*^9, 
+   3.6699093281060963`*^9}, {3.669909765779393*^9, 3.6699097868146615`*^9}, {
+   3.669910195250654*^9, 3.669910345049031*^9}, {3.6699108638414307`*^9, 
+   3.6699108995572624`*^9}, {3.6699111877706394`*^9, 3.6699112278045125`*^9}, 
+   3.6699139426607504`*^9, {3.6699142139044037`*^9, 3.669914247979139*^9}, {
+   3.6699152577209196`*^9, 3.669915266829379*^9}, {3.6699153404902782`*^9, 
+   3.6699153734071198`*^9}, 3.669915404226777*^9, {3.6699772650331755`*^9, 
+   3.6699772811770983`*^9}, {3.6699773705032077`*^9, 3.669977447659621*^9}, 
+   3.66998164368862*^9, {3.669981992001542*^9, 3.6699820202451577`*^9}, {
+   3.6699821239650903`*^9, 3.6699821754070325`*^9}, {3.669983560638263*^9, 
+   3.669983561140292*^9}, 3.669986980811886*^9, {3.669987066917811*^9, 
+   3.6699870675718484`*^9}, 3.6699875317904*^9}],
 
 Cell[BoxData[""], "Input"],
 
@@ -242,18 +336,18 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"HomeDirectory", "[", "]"}], ",", "\"\<Box Sync\>\"", ",", 
        "\"\<programming\>\"", ",", "\"\<visual studio\>\"", ",", 
-       "\"\<msGetBBG visual 0.4\>\"", ",", "\"\<msGetBBG\>\"", ",", 
+       "\"\<msGetBBG visual 0.5\>\"", ",", "\"\<msGetBBG\>\"", ",", 
        "\"\<Debug\>\"", ",", "\"\<msGetBBGLink.exe\>\""}], "}"}], "]"}], 
     "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.66721009343496*^9, 3.6672100976221995`*^9}, {
-  3.667210137771496*^9, 3.6672101409966803`*^9}, {3.6672214811403*^9, 
-  3.667221483404429*^9}}],
+   3.667210137771496*^9, 3.6672101409966803`*^9}, {3.6672214811403*^9, 
+   3.667221483404429*^9}, 3.6699139852120414`*^9}],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"link1", "=", 
    RowBox[{"Install", "[", 
-    RowBox[{"LinkConnect", "[", "\"\<yyyu\>\"", "]"}], "]"}]}], ";", 
+    RowBox[{"LinkConnect", "[", "\"\<1312\>\"", "]"}], "]"}]}], ";", 
   RowBox[{"(*", " ", "debugging", " ", "*)"}]}]], "Input",
  CellChangeTimes->{{3.667209471688398*^9, 3.6672094785907927`*^9}, {
    3.667209612974479*^9, 3.6672096132874975`*^9}, {3.667209697925338*^9, 
@@ -265,7 +359,28 @@ Cell[BoxData[
    3.6672214213998823`*^9, 3.6672214217299013`*^9}, {3.6672223140389385`*^9, 
    3.6672223144309607`*^9}, {3.667227568337467*^9, 3.6672275689505024`*^9}, {
    3.667227763113608*^9, 3.667227763623637*^9}, {3.667228743080659*^9, 
-   3.6672287434146776`*^9}, {3.667229343628008*^9, 3.6672293444890575`*^9}}],
+   3.6672287434146776`*^9}, {3.667229343628008*^9, 3.6672293444890575`*^9}, {
+   3.669933880901699*^9, 3.66993388136481*^9}, {3.6699340832001915`*^9, 
+   3.669934083500558*^9}, {3.6699347896064377`*^9, 3.669934790027932*^9}, {
+   3.66993528060005*^9, 3.669935281125066*^9}, {3.669936258233683*^9, 
+   3.6699362585503025`*^9}, {3.6699368462323236`*^9, 
+   3.6699368475944157`*^9}, {3.669937050707297*^9, 3.669937051502849*^9}, {
+   3.6699375050249023`*^9, 3.6699375056955466`*^9}, {3.6699732249130936`*^9, 
+   3.6699732269572105`*^9}, {3.66997411441197*^9, 3.6699741147569895`*^9}, {
+   3.669974347167283*^9, 3.6699743475073023`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"msGetBBG", "[", 
+  RowBox[{"\"\<AAPL US Equity\>\"", ",", "\"\<DVD_EX_DT\>\"", ",", 
+   RowBox[{"\"\<noisy\>\"", "\[Rule]", "False"}], ",", 
+   RowBox[{"\"\<LinkObject\>\"", "\[Rule]", "link1"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6699750070420256`*^9, 3.6699750075140524`*^9}}],
+
+Cell[BoxData["\<\"\\\"2016-02-04\\\"\"\>"], "Output",
+ CellChangeTimes->{3.669975012560341*^9, 3.6699778409621162`*^9}]
+}, Open  ]],
 
 Cell[BoxData[{
  RowBox[{
@@ -301,8 +416,8 @@ Cell[BoxData[{
    StyleBox["]", "MessageName"]}], 
   StyleBox[";", "MessageName"]}]}], "Input",
  CellChangeTimes->{{3.667209597663604*^9, 3.6672096012908106`*^9}, {
-  3.6672102149429097`*^9, 3.6672102237404127`*^9}, {3.6672221178507175`*^9, 
-  3.6672221251921372`*^9}}]
+   3.6672102149429097`*^9, 3.6672102237404127`*^9}, {3.6672221178507175`*^9, 
+   3.6672221251921372`*^9}, 3.6699362110240183`*^9}]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -325,7 +440,10 @@ Cell[BoxData[
   3.667222189473814*^9, {3.6672233825620546`*^9, 3.6672233838721294`*^9}, 
    3.667238888929968*^9}],
 
-Cell[BoxData["\<\"105.800000\"\>"], "Output",
+Cell[BoxData[
+ RowBox[{"msGetBBGLink", "[", 
+  RowBox[{"\<\"AAPL US Equity\"\>", ",", "\<\"Px_Last\"\>", ",", "0"}], 
+  "]"}]], "Output",
  CellChangeTimes->{
   3.6672221921239653`*^9, {3.6672233782918105`*^9, 3.6672233843111544`*^9}, 
    3.6672272313831944`*^9, 3.6672285870797358`*^9, {3.667228823504259*^9, 
@@ -335,7 +453,7 @@ Cell[BoxData["\<\"105.800000\"\>"], "Output",
    3.6672340489341364`*^9, 3.66723413764621*^9, 3.667235592345414*^9, 
    3.6672382416929483`*^9, {3.6672388864218245`*^9, 3.6672388876848965`*^9}, 
    3.6672392036349683`*^9, 3.6672393027876396`*^9, 3.6672411055617523`*^9, 
-   3.6672411627730246`*^9, 3.667242121105838*^9}]
+   3.6672411627730246`*^9, 3.667242121105838*^9, 3.669913968384721*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -636,14 +754,19 @@ Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"msGetBBG", "[", 
-  RowBox[{"\"\<AAPL US Equity\>\"", ",", "\"\<DVD_EX_DT\>\""}], 
-  "]"}]], "Input",
- CellChangeTimes->{{3.667240285772863*^9, 3.667240294255348*^9}}],
+  RowBox[{"\"\<AAPL US Equity\>\"", ",", "\"\<DVD_EX_DT\>\"", ",", 
+   RowBox[{"\"\<noisy\>\"", "\[Rule]", "False"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.667240285772863*^9, 3.667240294255348*^9}, {
+  3.669914272781809*^9, 3.6699142770262947`*^9}, {3.6699363847895184`*^9, 
+  3.6699363912977667`*^9}}],
 
 Cell[BoxData["\<\"\\\"2016-02-04\\\"\"\>"], "Output",
  CellChangeTimes->{{3.667240287039935*^9, 3.6672402947543764`*^9}, 
    3.667241185094301*^9, 3.667241237442295*^9, 3.6672418796120253`*^9, 
-   3.6672421216368685`*^9}]
+   3.6672421216368685`*^9, 3.6699141892276306`*^9, {3.6699142657259083`*^9, 
+   3.6699142794537973`*^9}, 3.6699144631319227`*^9, 3.6699145612648673`*^9, 
+   3.6699145983643713`*^9, {3.669936382001135*^9, 3.669936392377885*^9}, 
+   3.669937612690779*^9, 3.6699758249818087`*^9, 3.6699778069091687`*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1256,7 +1379,7 @@ Cell[BoxData[
      ",", 
      RowBox[{"\<\"Dividend Type\"\>", "\[Rule]", "\<\"Regular Cash\"\>"}]}], 
     "\[RightAssociation]"}]}], "}"}]], "Output",
- CellChangeTimes->{3.6672421218338795`*^9}]
+ CellChangeTimes->{3.6672421218338795`*^9, 3.669977806074121*^9}]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
@@ -1391,7 +1514,8 @@ Cell[BoxData[
    3.6672315141821566`*^9, 3.6672340791678658`*^9, 3.667234149218872*^9, 
    3.667235603133031*^9, 3.667238251741523*^9, 3.667238951437543*^9, 
    3.667239210349352*^9, {3.6672402103685503`*^9, 3.6672402162568865`*^9}, 
-   3.667241300728915*^9, 3.6672420244823112`*^9, 3.6672421222679043`*^9}]
+   3.667241300728915*^9, 3.6672420244823112`*^9, 3.6672421222679043`*^9, 
+   3.6699777986736975`*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1417,7 +1541,8 @@ Cell[BoxData[
     RowBox[{"\<\"TY US Equity\"\>", ",", "\<\"2016-03-10\"\>"}], "}"}]}], 
   "}"}]], "Output",
  CellChangeTimes->{3.6672402654316998`*^9, 3.6672413037570887`*^9, 
-  3.6672420281675224`*^9, 3.667242122434914*^9}]
+  3.6672420281675224`*^9, 3.667242122434914*^9, 3.6699758698193736`*^9, 
+  3.6699777999647713`*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -6974,15 +7099,17 @@ Cell[BoxData[
           ",", 
          RowBox[{"\<\"Dividend Type\"\>", "\[Rule]", "\<\"Income\"\>"}]}], 
         "\[RightAssociation]"}]}], "}"}]}], "}"}]}], "}"}]], "Output",
- CellChangeTimes->{3.6672420387391267`*^9, 3.6672421229779453`*^9}]
+ CellChangeTimes->{3.6672420387391267`*^9, 3.6672421229779453`*^9, 
+  3.6699758334312925`*^9}]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
-Cell["long list of data point", "Subsection",
- CellChangeTimes->{{3.6672392609832487`*^9, 3.667239265979534*^9}}],
+Cell["requesting for many names at once", "Subsection",
+ CellChangeTimes->{{3.6672392609832487`*^9, 3.667239265979534*^9}, {
+  3.6699744958537874`*^9, 3.6699745305697727`*^9}}],
 
 Cell[BoxData[{
  RowBox[{
@@ -7830,10 +7957,13 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["timing comparison", "Subsection",
+Cell["\<\
+timing comparison, multiple calls vs. single call with multiple names\
+\>", "Subsection",
  CellChangeTimes->{{3.6672341618475943`*^9, 3.6672341648177643`*^9}, {
    3.6672345278565288`*^9, 3.6672345297336364`*^9}, {3.6672356157057505`*^9, 
-   3.667235616328786*^9}, 3.667242974838318*^9}],
+   3.667235616328786*^9}, 3.667242974838318*^9, {3.6699744790258245`*^9, 
+   3.6699744879663363`*^9}}],
 
 Cell["38 names", "Text",
  CellChangeTimes->{3.667235618774926*^9}],
@@ -8088,12 +8218,82 @@ Cell[BoxData["38"], "Output",
    3.6672363508357973`*^9, 3.6672379528644285`*^9, 3.667238310484883*^9, 
    3.6672414073680143`*^9, 3.6672422185524116`*^9}]
 }, Open  ]]
-}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["with overrides", "Subsection",
+ CellChangeTimes->{{3.6699749912521224`*^9, 3.669974993493251*^9}}],
+
+Cell["\<\
+The overrides allowable for each Field can be found in the FLDS command on \
+the Bloomberg terminal.\
+\>", "Text",
+ CellChangeTimes->{
+  3.669975089324732*^9, {3.669986773649037*^9, 3.669986798370451*^9}, {
+   3.669987353927227*^9, 3.669987368345052*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"msGetBBG", "[", 
+  RowBox[{"\"\<AAPL US Equity\>\"", ",", "\"\<CORR_COEF\>\"", ",", 
+   RowBox[{"\"\<noisy\>\"", "\[Rule]", "False"}], ",", 
+   RowBox[{"\"\<overrides\>\"", "\[Rule]", 
+    RowBox[{"<|", 
+     RowBox[{
+      RowBox[{
+      "\"\<BETA_OVERRIDE_REL_INDEX\>\"", "\[Rule]", "\"\<NDX Index\>\""}], 
+      ",", " ", 
+      RowBox[{"\"\<BETA_OVERRIDE_START_DT\>\"", "\[Rule]", 
+       RowBox[{"bbgifyDate", "[", 
+        RowBox[{"{", 
+         RowBox[{"2015", ",", "2", ",", "3"}], "}"}], "]"}]}], ",", " ", 
+      RowBox[{"\"\<BETA_OVERRIDE_END_DT\>\"", "\[Rule]", 
+       RowBox[{"bbgifyDate", "[", 
+        RowBox[{"{", 
+         RowBox[{"2015", ",", "12", ",", "3"}], "}"}], "]"}]}]}], "|>"}]}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6699850970961437`*^9, 3.6699850999803085`*^9}, 
+   3.669986270307247*^9}],
+
+Cell[BoxData["0.864205`"], "Output",
+ CellChangeTimes->{
+  3.669985100684349*^9, {3.6699852038122473`*^9, 3.669985205941369*^9}, 
+   3.669986088298837*^9, 3.6699863310327206`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"msGetBBG", "[", 
+  RowBox[{"\"\<AAPL US Equity\>\"", ",", "\"\<BETA_RAW_OVERRIDABLE\>\"", ",", 
+   RowBox[{"\"\<noisy\>\"", "\[Rule]", "False"}], ",", 
+   RowBox[{"\"\<overrides\>\"", "\[Rule]", 
+    RowBox[{"<|", 
+     RowBox[{
+      RowBox[{
+      "\"\<BETA_OVERRIDE_REL_INDEX\>\"", "\[Rule]", "\"\<NDX Index\>\""}], 
+      ",", " ", 
+      RowBox[{"\"\<BETA_OVERRIDE_START_DT\>\"", "\[Rule]", 
+       RowBox[{"bbgifyDate", "[", 
+        RowBox[{"{", 
+         RowBox[{"2015", ",", "2", ",", "3"}], "}"}], "]"}]}], ",", " ", 
+      RowBox[{"\"\<BETA_OVERRIDE_END_DT\>\"", "\[Rule]", 
+       RowBox[{"bbgifyDate", "[", 
+        RowBox[{"{", 
+         RowBox[{"2015", ",", "12", ",", "3"}], "}"}], "]"}]}]}], "|>"}]}]}], 
+  "]"}]], "Input"],
+
+Cell[BoxData["1.206323`"], "Output",
+ CellChangeTimes->{3.6699863120836368`*^9}]
+}, Open  ]]
+}, Open  ]]
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1350, 1003},
-WindowMargins->{{Automatic, -1893}, {Automatic, 34}},
+WindowSize->{1350, 1004},
+WindowMargins->{{Automatic, 163}, {32, Automatic}},
 FrontEndVersion->"10.4 for Microsoft Windows (64-bit) (February 25, 2016)",
 StyleDefinitions->"Default.nb"
 ]
@@ -8109,157 +8309,173 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 103, 1, 101, "Title"],
-Cell[686, 25, 9044, 187, 912, "Input"],
-Cell[9733, 214, 26, 0, 31, "Input"],
+Cell[580, 22, 207, 3, 101, "Title"],
+Cell[790, 27, 13373, 279, 1172, "Input"],
+Cell[14166, 308, 26, 0, 31, "Input"],
 Cell[CellGroupData[{
-Cell[9784, 218, 119, 1, 70, "Section"],
+Cell[14217, 312, 119, 1, 70, "Section"],
 Cell[CellGroupData[{
-Cell[9928, 223, 111, 1, 49, "Subsection"],
-Cell[10042, 226, 256, 5, 30, "Text"],
-Cell[10301, 233, 699, 16, 52, "Input"],
-Cell[11003, 251, 1028, 16, 31, "Input"],
-Cell[12034, 269, 1263, 35, 112, "Input"]
+Cell[14361, 317, 111, 1, 49, "Subsection"],
+Cell[14475, 320, 256, 5, 30, "Text"],
+Cell[14734, 327, 725, 16, 52, "Input"],
+Cell[15462, 345, 1585, 24, 31, "Input"],
+Cell[CellGroupData[{
+Cell[17072, 373, 308, 5, 31, "Input"],
+Cell[17383, 380, 119, 1, 31, "Output"]
+}, Open  ]],
+Cell[17517, 384, 1289, 35, 112, "Input"]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[13334, 309, 106, 1, 41, "Subsection"],
+Cell[18843, 424, 106, 1, 41, "Subsection"],
 Cell[CellGroupData[{
-Cell[13465, 314, 96, 1, 39, "Subsubsection"],
+Cell[18974, 429, 96, 1, 39, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[13586, 319, 257, 6, 31, "Input"],
-Cell[13846, 327, 709, 10, 70, "Output"]
+Cell[19095, 434, 257, 6, 31, "Input"],
+Cell[19355, 442, 823, 13, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14592, 342, 201, 4, 31, "Input"],
-Cell[14796, 348, 222, 3, 70, "Output"]
+Cell[20215, 460, 201, 4, 31, "Input"],
+Cell[20419, 466, 222, 3, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15055, 356, 128, 2, 31, "Input"],
-Cell[15186, 360, 101, 1, 70, "Output"]
+Cell[20678, 474, 128, 2, 31, "Input"],
+Cell[20809, 478, 101, 1, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15324, 366, 182, 4, 31, "Input"],
-Cell[15509, 372, 169, 2, 70, "Output"]
+Cell[20947, 484, 182, 4, 31, "Input"],
+Cell[21132, 490, 169, 2, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15715, 379, 236, 5, 31, "Input"],
-Cell[15954, 386, 17316, 239, 70, "Output"]
+Cell[21338, 497, 236, 5, 31, "Input"],
+Cell[21577, 504, 17316, 239, 1852, "Output"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[33319, 631, 102, 1, 33, "Subsubsection"],
+Cell[38942, 749, 102, 1, 33, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[33446, 636, 190, 4, 31, "Input"],
-Cell[33639, 642, 221, 3, 70, "Output"]
+Cell[39069, 754, 347, 6, 31, "Input"],
+Cell[39419, 762, 495, 6, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[33897, 650, 245, 5, 31, "Input"],
-Cell[34145, 657, 34204, 601, 70, "Output"]
+Cell[39951, 773, 245, 5, 31, "Input"],
+Cell[40199, 780, 34226, 601, 1652, "Output"]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[68410, 1265, 115, 1, 49, "Subsection"],
+Cell[74486, 1388, 115, 1, 49, "Subsection"],
 Cell[CellGroupData[{
-Cell[68550, 1270, 98, 1, 39, "Subsubsection"],
+Cell[74626, 1393, 98, 1, 39, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[68673, 1275, 263, 6, 31, "Input"],
-Cell[68939, 1283, 775, 12, 70, "Output"]
+Cell[74749, 1398, 263, 6, 31, "Input"],
+Cell[75015, 1406, 775, 12, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[69751, 1300, 287, 6, 31, "Input"],
-Cell[70041, 1308, 939, 14, 70, "Output"]
+Cell[75827, 1423, 287, 6, 31, "Input"],
+Cell[76117, 1431, 939, 14, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[71017, 1327, 239, 5, 31, "Input"],
-Cell[71259, 1334, 287, 5, 70, "Output"]
+Cell[77093, 1450, 239, 5, 31, "Input"],
+Cell[77335, 1457, 287, 5, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[71583, 1344, 246, 5, 31, "Input"],
-Cell[71832, 1351, 218, 4, 70, "Output"]
+Cell[77659, 1467, 246, 5, 31, "Input"],
+Cell[77908, 1474, 218, 4, 31, "Output"]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[72099, 1361, 102, 1, 33, "Subsubsection"],
+Cell[78175, 1484, 102, 1, 33, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[72226, 1366, 402, 9, 31, "Input"],
-Cell[72631, 1377, 762, 16, 31, "Output"]
+Cell[78302, 1489, 402, 9, 31, "Input"],
+Cell[78707, 1500, 790, 17, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[73430, 1398, 356, 8, 31, "Input"],
-Cell[73789, 1408, 461, 11, 31, "Output"]
+Cell[79534, 1522, 356, 8, 31, "Input"],
+Cell[79893, 1532, 512, 12, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[74287, 1424, 357, 8, 31, "Input"],
-Cell[74647, 1434, 273870, 5542, 11792, "Output"]
+Cell[80442, 1549, 357, 8, 31, "Input"],
+Cell[80802, 1559, 273897, 5543, 11792, "Output"]
 }, Open  ]]
 }, Closed]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[348578, 6983, 113, 1, 49, "Subsection"],
-Cell[348694, 6986, 1275, 28, 92, "Input"],
+Cell[354760, 7109, 176, 2, 49, "Subsection"],
+Cell[354939, 7113, 1275, 28, 92, "Input"],
 Cell[CellGroupData[{
-Cell[349994, 7018, 95, 1, 39, "Subsubsection"],
+Cell[356239, 7145, 95, 1, 39, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[350114, 7023, 165, 3, 31, "Input"],
-Cell[350282, 7028, 2245, 30, 232, "Output"]
+Cell[356359, 7150, 165, 3, 31, "Input"],
+Cell[356527, 7155, 2245, 30, 232, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[352564, 7063, 197, 4, 31, "Input"],
-Cell[352764, 7069, 1557, 22, 172, "Output"]
+Cell[358809, 7190, 197, 4, 31, "Input"],
+Cell[359009, 7196, 1557, 22, 172, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[354358, 7096, 202, 4, 31, "Input"],
-Cell[354563, 7102, 7934, 200, 151, "Output"]
+Cell[360603, 7223, 202, 4, 31, "Input"],
+Cell[360808, 7229, 7934, 200, 151, "Output"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[362546, 7308, 102, 1, 39, "Subsubsection"],
+Cell[368791, 7435, 102, 1, 39, "Subsubsection"],
 Cell[CellGroupData[{
-Cell[362673, 7313, 391, 6, 31, "Input"],
-Cell[363067, 7321, 4357, 114, 212, "Output"]
+Cell[368918, 7440, 391, 6, 31, "Input"],
+Cell[369312, 7448, 4357, 114, 212, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[367461, 7440, 154, 3, 31, "Input"],
-Cell[367618, 7445, 124, 2, 31, "Output"]
+Cell[373706, 7567, 154, 3, 31, "Input"],
+Cell[373863, 7572, 124, 2, 31, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[367779, 7452, 244, 4, 31, "Input"],
-Cell[368026, 7458, 3315, 80, 152, "Output"]
+Cell[374024, 7579, 244, 4, 31, "Input"],
+Cell[374271, 7585, 3315, 80, 152, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[371378, 7543, 249, 4, 31, "Input"],
-Cell[371630, 7549, 11130, 276, 151, "Output"]
+Cell[377623, 7670, 249, 4, 31, "Input"],
+Cell[377875, 7676, 11130, 276, 151, "Output"]
 }, Open  ]]
 }, Open  ]]
 }, Closed]],
 Cell[CellGroupData[{
-Cell[382821, 7832, 237, 3, 41, "Subsection"],
-Cell[383061, 7837, 66, 1, 30, "Text"],
-Cell[383130, 7840, 245, 5, 30, "Text"],
+Cell[389066, 7959, 351, 6, 41, "Subsection"],
+Cell[389420, 7967, 66, 1, 30, "Text"],
+Cell[389489, 7970, 245, 5, 30, "Text"],
 Cell[CellGroupData[{
-Cell[383400, 7849, 348, 8, 72, "Input"],
-Cell[383751, 7859, 941, 16, 52, "Output"]
+Cell[389759, 7979, 348, 8, 72, "Input"],
+Cell[390110, 7989, 941, 16, 52, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[384729, 7880, 291, 8, 31, "Input"],
-Cell[385023, 7890, 95, 1, 31, "Output"]
+Cell[391088, 8010, 291, 8, 31, "Input"],
+Cell[391382, 8020, 95, 1, 31, "Output"]
 }, Open  ]],
-Cell[385133, 7894, 353, 7, 30, "Text"],
+Cell[391492, 8024, 353, 7, 30, "Text"],
 Cell[CellGroupData[{
-Cell[385511, 7905, 1741, 40, 212, "Input"],
-Cell[387255, 7947, 994, 17, 52, "Output"]
+Cell[391870, 8035, 1741, 40, 212, "Input"],
+Cell[393614, 8077, 994, 17, 52, "Output"]
 }, Open  ]],
-Cell[388264, 7967, 280, 6, 30, "Text"],
+Cell[394623, 8097, 280, 6, 30, "Text"],
 Cell[CellGroupData[{
-Cell[388569, 7977, 362, 6, 31, "Input"],
-Cell[388934, 7985, 3839, 87, 152, "Output"]
+Cell[394928, 8107, 362, 6, 31, "Input"],
+Cell[395293, 8115, 3839, 87, 152, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[392810, 8077, 260, 5, 31, "Input"],
-Cell[393073, 8084, 252, 4, 31, "Output"]
+Cell[399169, 8207, 260, 5, 31, "Input"],
+Cell[399432, 8214, 252, 4, 31, "Output"]
 }, Open  ]]
-}, Closed]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[399733, 8224, 104, 1, 41, "Subsection"],
+Cell[399840, 8227, 265, 6, 30, "Text"],
+Cell[CellGroupData[{
+Cell[400130, 8237, 849, 20, 72, "Input"],
+Cell[400982, 8259, 179, 3, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[401198, 8267, 764, 18, 72, "Input"],
+Cell[401965, 8287, 80, 1, 31, "Output"]
+}, Open  ]]
+}, Open  ]]
 }, Open  ]]
 }, Open  ]]
 }

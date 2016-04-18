@@ -10,6 +10,10 @@
  *   In[1]:= link = Install["portname", LinkMode->Connect]
  */
 
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "wstp.h"
 
 #include <blpapi_defs.h>
@@ -129,10 +133,11 @@ class RefDataExample
 	int                      d_port;
 	std::vector<std::string> d_securities;
 	std::vector<std::string> d_fields;
+	std::vector<std::string> d_overrides;
 	size_t					totalSecuritiesRequested = 0;
 	size_t					totalSecuritiesDealtWith = 0;
 
-	bool bloombergLists(const char* Ticker, const char* Field)	// formerly bool parseCommandLine(int argc, char **argv) from RefDataExample.cpp
+	bool bloombergLists(const char* Ticker, const char* Field, const char* overrides)
 	{
 
 		int verbosityCount = 0;
@@ -142,7 +147,7 @@ class RefDataExample
 
 		d_fields.push_back(Field);	// allows only a single Field. Could be adapted without too much trouble to allow multiple fields.
 
-		// new code for version 0.4 in which I allow multiple tickers
+		// new code as of version 0.4 in which I allow multiple tickers
 		strncpy_s(buff, 100000, Ticker, 99999);
 		token = std::strtok(buff, seps);
 		while (token != NULL)
@@ -152,10 +157,21 @@ class RefDataExample
 			token = std::strtok(NULL, seps);
 		}
 
+		// new code as of version 0.5 in which I allow overrides
+		if (strcmp(overrides,"")!=0) {
+			strncpy_s(buff, 100000, overrides, 99999);
+			token = std::strtok(buff, seps);
+			while (token != NULL)
+			{
+				d_overrides.push_back(token);
+				token = std::strtok(NULL, seps);
+			}
+		}
+
 		if (verbosityCount) {
 			registerCallback(verbosityCount);
 		}
-		// handle default arguments
+		// handle default arguments. this is thoroughly obsolete.
 		if (d_securities.size() == 0) {
 			d_securities.push_back("IBM US Equity");
 		}
@@ -216,6 +232,17 @@ class RefDataExample
 		Element fields = request.getElement("fields");
 		for (size_t i = 0; i < d_fields.size(); ++i) {
 			fields.appendValue(d_fields[i].c_str());
+		}
+
+		// Add overrides to request
+		if (d_overrides.size() > 0) {
+			Element overrides = request.getElement("overrides");
+			Element override1;
+			for (size_t i = 0; i < d_overrides.size(); i = i + 2) {	// i has to increment by two as I include both fieldIDs and values in the overrides string
+				override1 = overrides.appendElement();
+				override1.setElement("fieldId", d_overrides[i].c_str());
+				override1.setElement("value", d_overrides[i + 1].c_str());
+			}
 		}
 
 		request.set("returnNullValue", "True"); // thanks to Jose Paula Bloomberg Support -- this prevents crash on oddball outcomes like dividends announced but cancelled before record date
@@ -484,11 +511,11 @@ public:
 
 	// makes one or more Bloomberg calls, gets the Event response and associated MessageIterator, then calls ProcessMessage() to deal with what it's gotten. Returns the result to msGetBBGLink()
 	// adapted from BBG 2016, closely related to the "Retrieve" function in the 2008/2009 code's BBRetrieveCurrent
-	std::string run(const char* Ticker, const char* Field, int debug)
+	std::string run(const char* Ticker, const char* Field, int debug, const char* overrides)
 	{
 		std::stringstream outstream;
 //		std::string outstring;
-		bloombergLists(Ticker, Field); /* sets up tickers and fields */
+		bloombergLists(Ticker, Field, overrides); /* sets up tickers and fields */
 
 		SessionOptions sessionOptions;
 		sessionOptions.setServerHost(d_host.c_str());
@@ -504,7 +531,7 @@ public:
 			outstream << "Failed to open //blp/refdata" << std::endl;
 			return outstream.str();
 		}
-		sendRefDataRequest(session);
+		sendRefDataRequest(session); // seems to be dying here.
 
 
 		// wait for events from session.
@@ -527,11 +554,11 @@ public:
 
 // This is effectively our entry point. It's called by WSTP template code.
 // per the template file, msGetBBGLink() has a returntype of Manual, which means I need to use a function like WSPutInteger32() to return an integer
-void msGetBBGLink(const char* ticker, const char* field, int debug)
+void msGetBBGLink(const char* ticker, const char* field, int debug, const char* overrides)
 {
 	RefDataExample bbgCallResponse;
 	std::string bbgOutput;
-	bbgOutput = bbgCallResponse.run(ticker, field, debug);
+	bbgOutput = bbgCallResponse.run(ticker, field, debug, overrides);
 	WSPutString(stdlink, bbgOutput.c_str()/* std::string converted to const char */);	// https://reference.wolfram.com/language/ref/c/WSPutString.html
 
 	return;
